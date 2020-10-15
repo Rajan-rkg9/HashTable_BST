@@ -3,36 +3,54 @@ package com.DataStructure.HashTables_BST;
 import java.util.ArrayList;
 
 public class HashTables<K, V> {
-	 LinkedList<K> list;
+	
+	final int NUMBUCKETS;
+	
+	ArrayList<LinkedList<K>> bucketArray;
 	
 	public HashTables() {
-		this.list= new LinkedList<>();
+		this.NUMBUCKETS = 10;
+		this.bucketArray = new ArrayList<LinkedList<K>>();
+		for(int i = 0 ; i < NUMBUCKETS ; i++)
+			this.bucketArray.add(null);
 	} 
-	
+	public int getIndex(K key) {
+		int hashKey = Math.abs(key.hashCode());
+		int index = hashKey % NUMBUCKETS;
+		return index;
+	}
 	public V get(K key) {
-		MapNode<K, V> mapNode = (MapNode<K, V>) this.list.searchElement(key);
+		int index = getIndex(key);
+		LinkedList<K> linkedList = bucketArray.get(index);
+		if(linkedList == null)
+			return null;
+		MapNode<K, V> mapNode = (MapNode<K, V>)linkedList.searchElement(key);
 		return (mapNode == null) ? null : mapNode.getValue();
 	}
 	
 	public void add(K key, V value) {
-		MapNode<K, V> mapNode = (MapNode<K, V>) this.list.searchElement(key);
-		if(mapNode == null) {
-			list.insert(new MapNode<K, V>(key, value));
-		}
-		else 
+		int index = getIndex(key);
+		LinkedList<K> list = bucketArray.get(index);
+		if(list == null)
 		{
-			mapNode.setValue(value);
+			list = new LinkedList<K>();
+			bucketArray.set(index,list);
 		}
+		MapNode<K, V> mapNode = (MapNode<K, V>)list.searchElement(key);
+		if(mapNode == null)
+			list.append(new MapNode<K, V>(key, value));
+		else 
+			mapNode.setValue(value);
 	}
 
 	@Override
 	public String toString() {
-		return "HashMap{" + list + "}";
+		return "HashMap{" + bucketArray + "}";
 	}
 	
 	public static void main(String[] args) {
 		HashTables<String, Integer> hashTable= new HashTables<String, Integer>();
-		String sentence = "To be or not to be";
+		String sentence = "paranoid are not paranoid because they are paranoid but because they keep putting themselves deliberately into paranoid avoidable situations";
 		String wordsArray[] = sentence.toLowerCase().split(" ");
 		for(String word: wordsArray)
 		{
