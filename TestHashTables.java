@@ -25,17 +25,33 @@ public class TestHashTables {
 
 	@Test
 	public void givenASentence_WhenWordsAddedToHashTable_ShouldReturnParanoidFrequency() {
-		HashTables<String, Integer> hashMap= new HashTables<String, Integer>();
+		HashTables<String, Integer> hashTable= new HashTables<String, Integer>();
 		String sentence= "paranoid are not paranoid because they are paranoid but because they keep putting themselves deliberately into paranoid avoidable situations";
 		String wordsArray[] = sentence.toLowerCase().split(" ");
 		for(String word: wordsArray) {
-			if(hashMap.get(word) == null)
-				hashMap.add(word, 1);
+			if(hashTable.get(word) == null)
+				hashTable.add(word, 1);
 			else 
-				hashMap.add(word, hashMap.get(word)+1);;
+				hashTable.add(word, hashTable.get(word)+1);;
 		}
-		int count = hashMap.get("paranoid");
-		System.out.println(hashMap);
+		int count = hashTable.get("paranoid");
+		System.out.println(hashTable);
 		assertEquals(4, count);
 	}
+	
+	@Test
+	public void givenASentenceWordsAddedToHashMapWordWhenWordRemovedAndSearchedShouldReturnNull() {
+		HashTables<String, Integer> hashTable= new HashTables<String, Integer>();
+		String sentence= "paranoid are not paranoid because they are paranoid but because they keep putting themselves deliberately into paranoid avoidable situations";
+		String wordsArray[] = sentence.toLowerCase().split(" ");
+		for(String word: wordsArray) {
+			if(hashTable.get(word) == null)
+				hashTable.add(word, 1);
+			else 
+				hashTable.add(word, hashTable.get(word)+1);;
+		}
+		System.out.println(hashTable);
+		hashTable.remove("avoidable");
+		Integer count=hashTable.get("avoidable");
+		assertEquals(null, count);
 }

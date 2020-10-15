@@ -19,6 +19,14 @@ public class HashTables<K, V> {
 		int index = hashKey % NUMBUCKETS;
 		return index;
 	}
+	public int getSize() {
+		int size=0;
+		for(LinkedList<K> list: bucketArray) {
+			if(list!=null) 
+				size = size + list.size();
+		}
+		return size;
+	}
 	public V get(K key) {
 		int index = getIndex(key);
 		LinkedList<K> linkedList = bucketArray.get(index);
@@ -26,6 +34,9 @@ public class HashTables<K, V> {
 			return null;
 		MapNode<K, V> mapNode = (MapNode<K, V>)linkedList.searchElement(key);
 		return (mapNode == null) ? null : mapNode.getValue();
+	}
+	public boolean isEmpty() {
+		return getSize() == 0;
 	}
 	
 	public void add(K key, V value) {
@@ -41,6 +52,12 @@ public class HashTables<K, V> {
 			list.append(new MapNode<K, V>(key, value));
 		else 
 			mapNode.setValue(value);
+	}
+	public void remove(K key) {
+		LinkedList<K> list = bucketArray.get(getIndex(key));
+		if(list!=null) {
+			list.remove(key);
+		}
 	}
 
 	@Override
@@ -59,6 +76,9 @@ public class HashTables<K, V> {
 			else
 				hashTable.add(word, hashTable.get(word) + 1);
 		}
+		System.out.println(hashTable);
+		hashTable.remove("avoidable");
+		System.out.println("After deletion:");
 		System.out.println(hashTable);
 	}
 }
